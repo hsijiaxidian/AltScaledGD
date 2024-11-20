@@ -35,8 +35,6 @@ for i_kappa = 1:length(kappa_list)
     %% ScaledGD_Random
     L = randn(n,r)/10;
     R = randn(n,r)/10;
-
-
     for t = 1:T
         X = L*R';          
         [~,sl,~] = svd(L*R','econ');
@@ -46,8 +44,7 @@ for i_kappa = 1:length(kappa_list)
         errors_GD(i_kappa, t) = error;
         if ~isfinite(error) || error > thresh_up || error < thresh_low
             break;
-        end
-        
+        end    
         % update L
         Z = X - Y;
         L_plus = L - eta*Z*R;
@@ -56,18 +53,12 @@ for i_kappa = 1:length(kappa_list)
 
         L = L_plus;
         R = R_plus;
-        
-        
+           
     end
-    
-
-    
-    %% AltScaledGD
-
+      
+    %% AltScaledGD_Random
     L = randn(n,r)/10;
     R = randn(n,r)/10;
-
-
     for t = 1:T
         X = L*R';
         error =  norm((X - X_star), 'fro'),'fro');
@@ -75,22 +66,16 @@ for i_kappa = 1:length(kappa_list)
         if ~isfinite(error) || error > thresh_up || error < thresh_low
             break;
         end
-       
 
         X = L*R';
         Z = X - Y;
         L = L - eta*Z*R/(R'*R));
         X = L*R';
         Z = L*R'-Y;
-        R = R - eta*Z'*L/(L'*L);
-
-        
+        R = R - eta*Z'*L/(L'*L); 
     end
  
 end
-
-
-
 
 clrs = {[.5,0,.5], [1,.5,0], [1,0,0], [0,.5,0], [0,0,1]};
 mks = {'o', 'x', 'p', 's', 'd'};
