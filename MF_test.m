@@ -4,10 +4,9 @@
 %
 %
 clear; close all; clc;
-n = 5;
-r = 2;
+n = 500;
+r = 5;
 kappa_list = [10,10000];
-p = 1;
 T = 1000;
 eta = 0.01;
 thresh_up = 1e14; thresh_low = 1e-13;
@@ -31,8 +30,7 @@ for i_kappa = 1:length(kappa_list)
     L_star = U_star*diag(sqrt(sigma_star));
     R_star = V_star*diag(sqrt(sigma_star));
     X_star = L_star*R_star';
-    Omega = Omega_seed < p;
-    Y = Omega.*X_star;
+    Y = X_star;
 
     %% ScaledGD_Random
     L = randn(n,r)/10;
@@ -52,9 +50,9 @@ for i_kappa = 1:length(kappa_list)
         
         % update L
         Z = X - Y;
-        L_plus = L - eta/p*Z*R;%/(R'*R));
+        L_plus = L - eta*Z*R;
         Z = L*R'-Y;
-        R_plus = R - eta/p*Z'*L;%/(L'*L );
+        R_plus = R - eta*Z'*L;
 
         L = L_plus;
         R = R_plus;
@@ -72,7 +70,7 @@ for i_kappa = 1:length(kappa_list)
 
     for t = 1:T
         X = L*R';
-        error =  norm((X - X_star), 'fro')+norm((X'-X_star'),'fro');
+        error =  norm((X - X_star), 'fro'),'fro');
         errors_ScaledGD(i_kappa, t) = error;
         if ~isfinite(error) || error > thresh_up || error < thresh_low
             break;
@@ -81,10 +79,10 @@ for i_kappa = 1:length(kappa_list)
 
         X = L*R';
         Z = X - Y;
-        L = L - eta/p*Z*R/(R'*R));
+        L = L - eta*Z*R/(R'*R));
         X = L*R';
         Z = L*R'-Y;
-        R = R - eta/p*Z'*L/(L'*L);
+        R = R - eta*Z'*L/(L'*L);
 
         
     end
